@@ -17,6 +17,10 @@
 </p>
 
 <p align="center">
+  <a href="https://buymeacoffee.com/felipereisdev"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" height="44" alt="Buy Me a Coffee"></a>
+</p>
+
+<p align="center">
   <img src="docs/screenshot.png" width="760" alt="MacStatsBar aberto na barra de menus">
 </p>
 
@@ -118,6 +122,12 @@ Sources/MacStatsBar/
 ├── Settings.swift        # Preferências (UserDefaults) e abertura ao iniciar sessão
 └── Views.swift           # SwiftUI: barra, menu, skeleton e Preferências
 ```
+
+## Apoie o projeto
+
+Se o MacStatsBar te ajuda no dia a dia, considere me pagar um café ☕. Isso ajuda a manter o projeto e a trazer novas funções.
+
+<a href="https://buymeacoffee.com/felipereisdev"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" height="44" alt="Buy Me a Coffee"></a>
 
 ## Licença
 
