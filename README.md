@@ -1,11 +1,11 @@
 <p align="center">
-  <img src="docs/icon.png" width="128" alt="Ícone do MacStatsBar">
+  <img src="docs/icon.png" width="128" alt="MacStatsBar icon">
 </p>
 
 <h1 align="center">MacStatsBar</h1>
 
 <p align="center">
-  CPU, GPU, RAM, swap, disco, rede e temperatura do seu Mac, direto na barra de menus.
+  Your Mac's CPU, GPU, RAM, swap, disk, network and thermal state, right in the menu bar.
 </p>
 
 <p align="center">
@@ -13,7 +13,7 @@
   <img src="https://img.shields.io/badge/macOS-14%2B-111?logo=apple" alt="macOS 14+">
   <img src="https://img.shields.io/badge/Swift-SwiftUI-F05138?logo=swift&logoColor=white" alt="Swift">
   <img src="https://img.shields.io/badge/Apple%20Silicon%20%2B%20Intel-universal-7b5cff" alt="Universal">
-  <a href="LICENSE"><img src="https://img.shields.io/github/license/felipereisdev/mac-stats-bar?color=22b39a" alt="Licença MIT"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/felipereisdev/mac-stats-bar?color=22b39a" alt="MIT License"></a>
 </p>
 
 <p align="center">
@@ -21,114 +21,117 @@
 </p>
 
 <p align="center">
-  <img src="docs/screenshot.png" width="760" alt="MacStatsBar aberto na barra de menus">
+  <img src="docs/screenshot.png" width="760" alt="MacStatsBar open in the menu bar">
 </p>
-
-## Recursos
-
-- **Barra de menus compacta:** cada métrica tem um rótulo pequeno em cima e o número embaixo. As colunas têm largura fixa, então nada "pula" quando os valores mudam.
-- **Cores que avisam:** o número fica laranja e depois vermelho quando passa dos limites que você define. A RAM segue a **pressão de memória** do macOS (o mesmo indicador do Monitor de Atividade), e não a porcentagem usada, que vive alta no macOS e engana.
-- **Menu detalhado:** mostra GB usados de quantos, swap, núcleos de desempenho e de eficiência, leitura e gravação do disco, download e upload da rede e o estado térmico.
-- **Apps que mais consomem:** os 5 que mais usam memória ou CPU, com os processos auxiliares somados ao app (todo o Chrome aparece numa linha só).
-- **Encerrar pelo menu:** passe o mouse sobre um app e clique em **Encerrar**. Uma confirmação mostra quanto de RAM vai ser liberado. Processos do sistema aparecem com 🔒 e não podem ser encerrados.
-- **Termômetro discreto:** um 🌡 só aparece na barra quando o Mac esquenta a ponto de reduzir o desempenho.
-- **Leve:** cerca de 0,5% de CPU quando parado. A lista de processos só é coletada enquanto o menu está aberto.
-- **Privado:** nada sai do seu Mac. O app não acessa a rede nem coleta dados de uso.
-
-<p align="center">
-  <img src="docs/menubar-all.png" width="560" alt="Barra de menus com todas as colunas ligadas"><br>
-  <sub>Todas as colunas ligadas, incluindo as opcionais de rede (↓/↑) e de atividade do disco (L/G).</sub>
-</p>
-
-## Preferências
-
-Abra pelo menu em **Preferências…** (⌘,). Lá você escolhe:
-
-- quais colunas aparecem na barra;
-- a partir de que porcentagem o número fica laranja e vermelho;
-- se a cor da RAM segue a pressão de memória ou a porcentagem usada;
-- o intervalo de atualização (1, 2 ou 5 segundos);
-- se o app abre ao iniciar sessão.
-
-<p align="center">
-  <img src="docs/preferences.png" width="400" alt="Janela de Preferências">
-</p>
-
-## Instalação
-
-1. Baixe o `MacStatsBar-x.y.z.zip` da [página de releases](https://github.com/felipereisdev/mac-stats-bar/releases/latest).
-2. Descompacte e arraste o **MacStatsBar.app** para a pasta **Aplicativos**.
-3. Abra o app. Ele aparece na barra de menus, sem ícone no Dock.
 
 > [!NOTE]
-> O app tem assinatura ad-hoc e não é notarizado pela Apple, então na primeira abertura o macOS avisa que não pode verificar o desenvolvedor. Para liberar, vá em **Ajustes do Sistema › Privacidade e Segurança** e clique em **Abrir Mesmo Assim**. Outra opção é rodar no Terminal:
+> The app's interface is in Brazilian Portuguese.
+
+## Features
+
+- **Compact menu bar item:** each metric shows a small label on top and its value below. Columns have a fixed width, so nothing jumps around as values change.
+- **Color alerts:** a value turns orange, then red, once it crosses thresholds you choose. RAM follows macOS **memory pressure** (the same indicator Activity Monitor uses) rather than the percentage used, which is always high on macOS and misleading.
+- **Detailed menu:** GB used out of total, swap, performance and efficiency cores, disk reads and writes, network download and upload, and the thermal state.
+- **Top consumers:** the 5 apps using the most memory or CPU, with helper processes added to their app (all of Chrome shows up as one row).
+- **Quit from the menu:** hover over an app and click **Encerrar** (Quit). A confirmation shows how much RAM will be freed. System processes are marked with 🔒 and can't be quit.
+- **Discreet thermometer:** a 🌡 only appears in the menu bar when the Mac gets hot enough to throttle.
+- **Lightweight:** about 0.5% CPU when idle. The process list is only collected while the menu is open.
+- **Private:** nothing leaves your Mac. The app makes no network requests and collects no usage data.
+
+<p align="center">
+  <img src="docs/menubar-all.png" width="560" alt="Menu bar with every column enabled"><br>
+  <sub>Every column enabled, including the optional network (↓/↑) and disk activity (L/G for read/write) columns.</sub>
+</p>
+
+## Preferences
+
+Open them from the menu with **Preferências…** (⌘,). You can choose:
+
+- which columns appear in the menu bar;
+- the percentages at which values turn orange and red;
+- whether the RAM color follows memory pressure or the percentage used;
+- the refresh interval (1, 2 or 5 seconds);
+- whether the app opens at login.
+
+<p align="center">
+  <img src="docs/preferences.png" width="400" alt="Preferences window">
+</p>
+
+## Installation
+
+1. Download `MacStatsBar-x.y.z.zip` from the [releases page](https://github.com/felipereisdev/mac-stats-bar/releases/latest).
+2. Unzip it and drag **MacStatsBar.app** into your **Applications** folder.
+3. Open the app. It shows up in the menu bar, with no Dock icon.
+
+> [!NOTE]
+> The app is ad-hoc signed and not notarized by Apple, so the first time you open it macOS warns that it can't verify the developer. To allow it, go to **System Settings › Privacy & Security** and click **Open Anyway**. Alternatively, run this in Terminal:
 >
 > ```bash
 > xattr -dr com.apple.quarantine /Applications/MacStatsBar.app
 > ```
 
-Para tirar o app do início de sessão, use as Preferências ou **Ajustes do Sistema › Geral › Itens de Início**.
+To stop the app from opening at login, use its Preferences or **System Settings › General › Login Items**.
 
-## Compilar a partir do código
+## Building from source
 
-Você precisa do Swift 5.9 ou mais novo. As Command Line Tools bastam (`xcode-select --install`), não é preciso ter o Xcode.
+You need Swift 5.9 or later. The Command Line Tools are enough (`xcode-select --install`); Xcode isn't required.
 
 ```bash
 git clone https://github.com/felipereisdev/mac-stats-bar.git
 cd mac-stats-bar
-./install.sh            # compila, instala em /Applications e abre o app
+./install.sh            # builds, installs to /Applications and opens the app
 ```
 
-Outros scripts:
+Other scripts:
 
-| Comando | O que faz |
+| Command | What it does |
 | --- | --- |
-| `Scripts/build-app.sh` | Monta `build/MacStatsBar.app` (com `--universal`, para arm64 e x86_64) |
-| `Scripts/package.sh` | Gera o `.zip` universal usado nas releases |
-| `swift Scripts/make-icon.swift` | Redesenha o ícone (`Resources/AppIcon.icns` e `docs/icon.png`) |
+| `Scripts/build-app.sh` | Builds `build/MacStatsBar.app` (`--universal` for arm64 and x86_64) |
+| `Scripts/package.sh` | Creates the universal `.zip` used for releases |
+| `swift Scripts/make-icon.swift` | Redraws the icon (`Resources/AppIcon.icns` and `docs/icon.png`) |
 
-## De onde vêm os números
+## Where the numbers come from
 
-Todos os valores vêm de APIs públicas do macOS e não exigem senha de administrador. Cada um foi conferido com a ferramenta de referência indicada.
+Every value comes from public macOS APIs and none of them require an administrator password. Each one was checked against the reference tool listed.
 
-| Métrica | Fonte | Referência |
+| Metric | Source | Checked against |
 | --- | --- | --- |
-| CPU | `host_statistics` (`HOST_CPU_LOAD_INFO`), diferença entre duas leituras | `iostat` (us + sy) |
-| GPU | `IOAccelerator` › `PerformanceStatistics` › `Device Utilization %` (valor instantâneo) | `ioreg` |
-| Memória | Fórmula do Monitor de Atividade: memória dos apps + fixa + comprimida (`host_statistics64`) | `vm_stat` |
-| Pressão de memória | `kern.memorystatus_vm_pressure_level` | `memory_pressure` |
+| CPU | `host_statistics` (`HOST_CPU_LOAD_INFO`), difference between two readings | `iostat` (us + sy) |
+| GPU | `IOAccelerator` › `PerformanceStatistics` › `Device Utilization %` (instantaneous value) | `ioreg` |
+| Memory | Activity Monitor's formula: app memory + wired + compressed (`host_statistics64`) | `vm_stat` |
+| Memory pressure | `kern.memorystatus_vm_pressure_level` | `memory_pressure` |
 | Swap | `vm.swapusage` | `sysctl vm.swapusage` |
-| Disco (espaço) | Capacidade disponível "para uso importante", a mesma que o Finder mostra | Finder |
-| Disco (atividade) | `IOBlockStorageDriver` › `Statistics` | `iostat` |
-| Rede | Contadores das interfaces físicas (`en*`) via `NET_RT_IFLIST2` | `netstat -ib` |
-| Temperatura | `ProcessInfo.thermalState` | `pmset -g therm` |
-| Processos | `top` (memória como no Monitor de Atividade e %CPU), agrupados pelo app | Monitor de Atividade |
+| Disk space | Capacity available "for important usage", the same figure Finder shows | Finder |
+| Disk activity | `IOBlockStorageDriver` › `Statistics` | `iostat` |
+| Network | Physical interface (`en*`) counters via `NET_RT_IFLIST2` | `netstat -ib` |
+| Thermal state | `ProcessInfo.thermalState` | `pmset -g therm` |
+| Processes | `top` (memory as in Activity Monitor, and %CPU), grouped by app | Activity Monitor |
 
-Algumas observações:
+A few notes:
 
-- **Espaço em disco:** o espaço que o macOS pode liberar sozinho, como caches e snapshots locais, conta como livre, igual ao Finder. Por isso o valor "usado" pode ser menor que o do `df` ou do `diskutil`.
-- **Rede:** VPNs e redes virtuais de VMs e containers ficam de fora, para o mesmo tráfego não ser contado duas vezes. Os contadores das interfaces têm 32 bits para apps sem privilégios, então o app trata a volta que acontece a cada 4 GB.
-- **CPU por app:** é contada por núcleo, como no Monitor de Atividade, então um app pode passar de 100%.
-- **Temperatura:** o macOS não oferece leitura em graus sem acesso privilegiado. O app mostra o estado térmico que o sistema informa (Normal, Elevada, Alta ou Crítica).
+- **Disk space:** space macOS can free on its own, such as caches and local snapshots, counts as free, just like in Finder. That's why "used" can be lower than what `df` or `diskutil` report.
+- **Network:** VPNs and the virtual networks of VMs and containers are excluded so the same traffic isn't counted twice. Interface counters are only 32 bits wide for unprivileged apps, so the app handles the wraparound that happens every 4 GB.
+- **Per-app CPU:** measured per core, as in Activity Monitor, so an app can go above 100%.
+- **Temperature:** macOS doesn't expose readings in degrees without privileged access. The app shows the thermal state the system reports (Normal, Elevada, Alta or Crítica, which mean normal, fair, serious and critical).
 
-## Estrutura
+## Project structure
 
 ```
 Sources/MacStatsBar/
-├── main.swift            # AppDelegate: item da barra, menu, timer, encerrar apps, Preferências
-├── SystemSampler.swift   # Coleta de CPU, GPU, memória, swap, disco, rede e temperatura
-├── TopSampler.swift      # Processos via `top`, agrupados por app
-├── StatsModel.swift      # Estado observável, níveis de alerta e formatação pt-BR
-├── Settings.swift        # Preferências (UserDefaults) e abertura ao iniciar sessão
-└── Views.swift           # SwiftUI: barra, menu, skeleton e Preferências
+├── main.swift            # AppDelegate: menu bar item, menu, timer, quitting apps, Preferences
+├── SystemSampler.swift   # Collects CPU, GPU, memory, swap, disk, network and thermal state
+├── TopSampler.swift      # Processes via `top`, grouped by app
+├── StatsModel.swift      # Observable state, alert levels and pt-BR formatting
+├── Settings.swift        # Preferences (UserDefaults) and open at login
+└── Views.swift           # SwiftUI: menu bar, menu, skeleton and Preferences
 ```
 
-## Apoie o projeto
+## Support the project
 
-Se o MacStatsBar te ajuda no dia a dia, considere me pagar um café ☕. Isso ajuda a manter o projeto e a trazer novas funções.
+If MacStatsBar helps you every day, consider buying me a coffee ☕. It helps keep the project going and brings new features.
 
 <a href="https://buymeacoffee.com/felipereisdev"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" height="44" alt="Buy Me a Coffee"></a>
 
-## Licença
+## License
 
 [MIT](LICENSE) © Felipe Reis
