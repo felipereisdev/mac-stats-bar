@@ -13,19 +13,22 @@ struct StatusBarView: View {
             ForEach(metrics) { metric in
                 switch metric {
                 case .cpu:
-                    StatColumn(label: "CPU", value: Format.percent(s.cpu), level: settings.level(s.cpu))
+                    StatColumn(label: String(localized: "CPU"), value: Format.percent(s.cpu), level: settings.level(s.cpu))
                 case .gpu:
-                    StatColumn(label: "GPU", value: Format.percent(s.gpu), level: settings.level(s.gpu))
+                    StatColumn(label: String(localized: "GPU"), value: Format.percent(s.gpu), level: settings.level(s.gpu))
                 case .ram:
-                    StatColumn(label: "RAM", value: Format.percent(s.memFraction), level: settings.ramLevel(s))
+                    StatColumn(label: String(localized: "RAM"), value: Format.percent(s.memFraction), level: settings.ramLevel(s))
                 case .swap:
-                    StatColumn(label: "SWAP", value: Format.compact(s.swapUsed), level: settings.level(s.swapFraction))
+                    StatColumn(label: String(localized: "SWAP"), value: Format.compact(s.swapUsed), level: settings.level(s.swapFraction))
                 case .disk:
-                    StatColumn(label: "DISCO", value: Format.percent(s.diskFraction), level: settings.level(s.diskFraction))
+                    StatColumn(label: String(localized: "DISK"), value: Format.percent(s.diskFraction), level: settings.level(s.diskFraction))
                 case .network:
                     TwoLineColumn(top: "↓" + Format.compactRate(s.netIn), bottom: "↑" + Format.compactRate(s.netOut))
                 case .diskIO:
-                    TwoLineColumn(top: "L " + Format.compactRate(s.diskRead), bottom: "G " + Format.compactRate(s.diskWrite))
+                    TwoLineColumn(
+                        top: String(localized: "R") + " " + Format.compactRate(s.diskRead),
+                        bottom: String(localized: "W") + " " + Format.compactRate(s.diskWrite)
+                    )
                 }
             }
             // Only shown when the Mac is hot enough to throttle.
@@ -87,14 +90,14 @@ struct MenuPanelView: View {
         let s = model.snapshot
         VStack(alignment: .leading, spacing: 0) {
             VStack(spacing: 12) {
-                MetricRow(name: "CPU", value: Format.percent(s.cpu), fraction: s.cpu, level: settings.level(s.cpu)) {
+                MetricRow(name: String(localized: "CPU"), value: Format.percent(s.cpu), fraction: s.cpu, level: settings.level(s.cpu)) {
                     Text(model.coresDetail)
                 }
-                MetricRow(name: "GPU", value: Format.percent(s.gpu), fraction: s.gpu, level: settings.level(s.gpu)) {
+                MetricRow(name: String(localized: "GPU"), value: Format.percent(s.gpu), fraction: s.gpu, level: settings.level(s.gpu)) {
                     EmptyView()
                 }
                 MetricRow(
-                    name: "Memória",
+                    name: String(localized: "Memory"),
                     value: "\(Format.gib(s.memUsed)) / \(Format.gib(s.memTotal)) GB",
                     fraction: s.memFraction,
                     level: settings.ramLevel(s)
@@ -102,25 +105,25 @@ struct MenuPanelView: View {
                     HStack(spacing: 0) {
                         StatusDot(color: s.pressure.dotColor)
                         Text(Format.pressure(s.pressure))
-                        Text(" · Swap \(Format.gib(s.swapUsed)) / \(Format.gib(s.swapTotal)) GB")
+                        Text(verbatim: " · Swap \(Format.gib(s.swapUsed)) / \(Format.gib(s.swapTotal)) GB")
                     }
                 }
                 MetricRow(
-                    name: "Disco",
+                    name: String(localized: "Disk"),
                     value: Format.disk(used: s.diskUsed, total: s.diskTotal),
                     fraction: s.diskFraction,
                     level: settings.level(s.diskFraction)
                 ) {
-                    Text("Leitura \(Format.rate(s.diskRead)) · Gravação \(Format.rate(s.diskWrite))")
+                    Text("Read \(Format.rate(s.diskRead)) · Write \(Format.rate(s.diskWrite))")
                 }
                 HStack {
-                    Text("Rede").fontWeight(.semibold)
+                    Text("Network").fontWeight(.semibold)
                     Spacer()
-                    Text("↓ \(Format.rate(s.netIn))   ↑ \(Format.rate(s.netOut))")
+                    Text(verbatim: "↓ \(Format.rate(s.netIn))   ↑ \(Format.rate(s.netOut))")
                         .monospacedDigit()
                 }
                 HStack(spacing: 0) {
-                    Text("Temperatura").fontWeight(.semibold)
+                    Text("Temperature").fontWeight(.semibold)
                     Spacer()
                     StatusDot(color: s.thermal.dotColor)
                     Text(Format.thermal(s.thermal))
@@ -130,7 +133,7 @@ struct MenuPanelView: View {
             Divider().padding(.vertical, 12)
 
             Picker("", selection: $model.sort) {
-                Text("Memória").tag(ProcessSort.memory)
+                Text("Memory").tag(ProcessSort.memory)
                 Text("CPU").tag(ProcessSort.cpu)
             }
             .pickerStyle(.segmented)
@@ -257,11 +260,11 @@ private struct ProcessList: View {
                 Image(systemName: "lock.fill")
                     .font(.system(size: 9))
                     .foregroundStyle(.tertiary)
-                    .help("Processo do sistema: não pode ser encerrado por aqui")
+                    .help("System process: it can't be quit from here")
             }
             Spacer(minLength: 8)
             if hovered && app.canQuit {
-                Button("Encerrar") { model.onQuitRequest?(app) }
+                Button("Quit") { model.onQuitRequest?(app) }
                     .buttonStyle(QuitButtonStyle())
             } else {
                 Text(model.sort == .memory ? Format.memory(app.memBytes) : Format.cpu(app.cpuPercent))
@@ -323,7 +326,7 @@ struct PreferencesView: View {
 
     var body: some View {
         Form {
-            Section("Mostrar na barra de menus") {
+            Section("Show in the menu bar") {
                 ForEach(BarMetric.allCases) { metric in
                     Toggle(metric.title, isOn: Binding(
                         get: { settings.barMetrics.contains(metric) },
@@ -333,25 +336,25 @@ struct PreferencesView: View {
                     ))
                 }
             }
-            Section("Cores") {
-                Picker("Laranja a partir de", selection: $settings.warningThreshold) {
-                    ForEach(Settings.thresholdOptions, id: \.self) { Text("\($0)%").tag($0) }
+            Section("Colors") {
+                Picker("Orange from", selection: $settings.warningThreshold) {
+                    ForEach(Settings.thresholdOptions, id: \.self) { Text(verbatim: "\($0)%").tag($0) }
                 }
-                Picker("Vermelho a partir de", selection: $settings.criticalThreshold) {
-                    ForEach(Settings.thresholdOptions, id: \.self) { Text("\($0)%").tag($0) }
+                Picker("Red from", selection: $settings.criticalThreshold) {
+                    ForEach(Settings.thresholdOptions, id: \.self) { Text(verbatim: "\($0)%").tag($0) }
                 }
-                Picker("Cor da RAM segue", selection: $settings.ramColorByPressure) {
-                    Text("Pressão de memória").tag(true)
-                    Text("Porcentagem usada").tag(false)
+                Picker("RAM color follows", selection: $settings.ramColorByPressure) {
+                    Text("Memory pressure").tag(true)
+                    Text("Percentage used").tag(false)
                 }
             }
-            Section("Geral") {
-                Picker("Atualizar a cada", selection: $settings.refreshInterval) {
+            Section("General") {
+                Picker("Refresh every", selection: $settings.refreshInterval) {
                     ForEach(Settings.intervalOptions, id: \.self) { seconds in
-                        Text(seconds == 1 ? "1 segundo" : "\(Int(seconds)) segundos").tag(seconds)
+                        (seconds == 1 ? Text("1 second") : Text("\(Int(seconds)) seconds")).tag(seconds)
                     }
                 }
-                Toggle("Abrir ao iniciar sessão", isOn: $settings.launchAtLogin)
+                Toggle("Open at login", isOn: $settings.launchAtLogin)
             }
         }
         .formStyle(.grouped)

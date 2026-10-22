@@ -24,8 +24,7 @@
   <img src="docs/screenshot.png" width="760" alt="MacStatsBar open in the menu bar">
 </p>
 
-> [!NOTE]
-> The app's interface is in Brazilian Portuguese.
+Available in **English** and **Brazilian Portuguese**, following your system language.
 
 ## Features
 
@@ -33,19 +32,19 @@
 - **Color alerts:** a value turns orange, then red, once it crosses thresholds you choose. RAM follows macOS **memory pressure** (the same indicator Activity Monitor uses) rather than the percentage used, which is always high on macOS and misleading.
 - **Detailed menu:** GB used out of total, swap, performance and efficiency cores, disk reads and writes, network download and upload, and the thermal state.
 - **Top consumers:** the 5 apps using the most memory or CPU, with helper processes added to their app (all of Chrome shows up as one row).
-- **Quit from the menu:** hover over an app and click **Encerrar** (Quit). A confirmation shows how much RAM will be freed. System processes are marked with 🔒 and can't be quit.
+- **Quit from the menu:** hover over an app and click **Quit**. A confirmation shows how much RAM will be freed. System processes are marked with 🔒 and can't be quit.
 - **Discreet thermometer:** a 🌡 only appears in the menu bar when the Mac gets hot enough to throttle.
 - **Lightweight:** about 0.5% CPU when idle. The process list is only collected while the menu is open.
 - **Private:** nothing leaves your Mac. The app makes no network requests and collects no usage data.
 
 <p align="center">
   <img src="docs/menubar-all.png" width="560" alt="Menu bar with every column enabled"><br>
-  <sub>Every column enabled, including the optional network (↓/↑) and disk activity (L/G for read/write) columns.</sub>
+  <sub>Every column enabled, including the optional network (↓/↑) and disk activity (R/W) columns.</sub>
 </p>
 
-## Preferences
+## Settings
 
-Open them from the menu with **Preferências…** (⌘,). You can choose:
+Open them from the menu with **Settings…** (⌘,). You can choose:
 
 - which columns appear in the menu bar;
 - the percentages at which values turn orange and red;
@@ -54,7 +53,7 @@ Open them from the menu with **Preferências…** (⌘,). You can choose:
 - whether the app opens at login.
 
 <p align="center">
-  <img src="docs/preferences.png" width="400" alt="Preferences window">
+  <img src="docs/preferences.png" width="400" alt="Settings window">
 </p>
 
 ## Installation
@@ -70,7 +69,7 @@ Open them from the menu with **Preferências…** (⌘,). You can choose:
 > xattr -dr com.apple.quarantine /Applications/MacStatsBar.app
 > ```
 
-To stop the app from opening at login, use its Preferences or **System Settings › General › Login Items**.
+To stop the app from opening at login, use its Settings or **System Settings › General › Login Items**.
 
 ## Building from source
 
@@ -112,18 +111,19 @@ A few notes:
 - **Disk space:** space macOS can free on its own, such as caches and local snapshots, counts as free, just like in Finder. That's why "used" can be lower than what `df` or `diskutil` report.
 - **Network:** VPNs and the virtual networks of VMs and containers are excluded so the same traffic isn't counted twice. Interface counters are only 32 bits wide for unprivileged apps, so the app handles the wraparound that happens every 4 GB.
 - **Per-app CPU:** measured per core, as in Activity Monitor, so an app can go above 100%.
-- **Temperature:** macOS doesn't expose readings in degrees without privileged access. The app shows the thermal state the system reports (Normal, Elevada, Alta or Crítica, which mean normal, fair, serious and critical).
+- **Temperature:** macOS doesn't expose readings in degrees without privileged access. The app shows the thermal state the system reports: Normal, Fair, Serious or Critical.
 
 ## Project structure
 
 ```
 Sources/MacStatsBar/
-├── main.swift            # AppDelegate: menu bar item, menu, timer, quitting apps, Preferences
+├── main.swift            # AppDelegate: menu bar item, menu, timer, quitting apps, Settings
 ├── SystemSampler.swift   # Collects CPU, GPU, memory, swap, disk, network and thermal state
 ├── TopSampler.swift      # Processes via `top`, grouped by app
-├── StatsModel.swift      # Observable state, alert levels and pt-BR formatting
-├── Settings.swift        # Preferences (UserDefaults) and open at login
-└── Views.swift           # SwiftUI: menu bar, menu, skeleton and Preferences
+├── StatsModel.swift      # Observable state, alert levels and locale-aware formatting
+├── Settings.swift        # Settings (UserDefaults) and open at login
+└── Views.swift           # SwiftUI: menu bar, menu, skeleton and Settings
+Resources/Localization/   # en and pt-BR strings
 ```
 
 ## Support the project

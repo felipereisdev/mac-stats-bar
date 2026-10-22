@@ -89,13 +89,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         menu.addItem(panelItem)
 
         menu.addItem(.separator())
-        let preferences = NSMenuItem(title: "Preferências…", action: #selector(openPreferences), keyEquivalent: ",")
+        let preferences = NSMenuItem(title: String(localized: "Settings…"), action: #selector(openPreferences), keyEquivalent: ",")
         preferences.target = self
         menu.addItem(preferences)
-        let activityMonitor = NSMenuItem(title: "Abrir Monitor de Atividade", action: #selector(openActivityMonitor), keyEquivalent: "")
+        let activityMonitor = NSMenuItem(title: String(localized: "Open Activity Monitor"), action: #selector(openActivityMonitor), keyEquivalent: "")
         activityMonitor.target = self
         menu.addItem(activityMonitor)
-        menu.addItem(NSMenuItem(title: "Sair", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
+        menu.addItem(NSMenuItem(title: String(localized: "Quit MacStatsBar"), action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
 
         statusItem.menu = menu
     }
@@ -130,20 +130,22 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
             .filter { $0.bundleURL.map { !$0.path.contains(".app/") } ?? false }
 
         let alert = NSAlert()
-        alert.messageText = "Encerrar \(app.name)?"
-        var info = "Vai liberar cerca de \(Format.memory(app.memBytes)) de memória."
-        if runningApps.isEmpty {
-            info += app.pids.count > 1 ? " Os \(app.pids.count) processos serão finalizados" : " O processo será finalizado"
-            info += " sem chance de salvar o que estiver aberto."
+        alert.messageText = String(localized: "Quit \(app.name)?")
+        let freed = String(localized: "This will free about \(Format.memory(app.memBytes)) of memory.")
+        let consequence: String
+        if !runningApps.isEmpty {
+            consequence = String(localized: "If anything is unsaved, the app will ask before closing.")
+        } else if app.pids.count > 1 {
+            consequence = String(localized: "Its \(app.pids.count) processes will be terminated without a chance to save open work.")
         } else {
-            info += " Se houver algo sem salvar, o app vai perguntar antes de fechar."
+            consequence = String(localized: "The process will be terminated without a chance to save open work.")
         }
-        alert.informativeText = info
+        alert.informativeText = freed + " " + consequence
         if let path = app.appPath {
             alert.icon = NSWorkspace.shared.icon(forFile: path)
         }
-        alert.addButton(withTitle: "Encerrar").hasDestructiveAction = true
-        alert.addButton(withTitle: "Cancelar")
+        alert.addButton(withTitle: String(localized: "Quit")).hasDestructiveAction = true
+        alert.addButton(withTitle: String(localized: "Cancel"))
 
         NSApp.activate()
         guard alert.runModal() == .alertFirstButtonReturn else { return }

@@ -8,13 +8,13 @@ enum BarMetric: String, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .cpu: "CPU"
-        case .gpu: "GPU"
-        case .ram: "RAM"
-        case .swap: "Swap"
-        case .disk: "Disco (espaço)"
-        case .network: "Rede"
-        case .diskIO: "Atividade do disco"
+        case .cpu: String(localized: "CPU")
+        case .gpu: String(localized: "GPU")
+        case .ram: String(localized: "RAM")
+        case .swap: String(localized: "Swap")
+        case .disk: String(localized: "Disk space")
+        case .network: String(localized: "Network")
+        case .diskIO: String(localized: "Disk activity")
         }
     }
 }

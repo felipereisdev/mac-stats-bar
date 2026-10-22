@@ -43,11 +43,11 @@ final class StatsModel: ObservableObject {
         let total = ProcessInfo.processInfo.processorCount
         let performance = sysctlInt("hw.perflevel0.physicalcpu")
         let efficiency = sysctlInt("hw.perflevel1.physicalcpu")
-        guard performance > 0, efficiency > 0 else { return "\(total) núcleos" }
-        return "\(total) núcleos · \(performance) de desempenho + \(efficiency) de eficiência"
+        guard performance > 0, efficiency > 0 else { return String(localized: "\(total) cores") }
+        return String(localized: "\(total) cores · \(performance) performance + \(efficiency) efficiency")
     }()
 
-    /// Set by the app delegate; called when the user clicks "Encerrar" on a process row.
+    /// Set by the app delegate; called when the user clicks "Quit" on a process row.
     var onQuitRequest: ((AppUsage) -> Void)?
 
     private var iconCache: [String: NSImage] = [:]
@@ -91,32 +91,33 @@ final class StatsModel: ObservableObject {
 }
 
 enum Format {
-    private static let locale = Locale(identifier: "pt_BR")
+    /// Decimal separators follow the user's region ("13.9" or "13,9").
+    private static var locale: Locale { .current }
 
     static func percent(_ fraction: Double) -> String {
         "\(Int((fraction * 100).rounded()))%"
     }
 
-    /// Binary gigabytes with one decimal, as Activity Monitor shows memory: "13,9".
+    /// Binary gigabytes with one decimal, as Activity Monitor shows memory: "13.9".
     static func gib(_ bytes: UInt64) -> String {
         String(format: "%.1f", locale: locale, Double(bytes) / Double(1 << 30))
     }
 
-    /// Compact size for the menu bar: "5,3G" or "820M".
+    /// Compact size for the menu bar: "5.3G" or "820M".
     static func compact(_ bytes: UInt64) -> String {
         let gib = Double(bytes) / Double(1 << 30)
         if gib >= 1 { return String(format: gib >= 10 ? "%.0fG" : "%.1fG", locale: locale, gib) }
         return "\(Int((Double(bytes) / Double(1 << 20)).rounded()))M"
     }
 
-    /// Process memory: "4,1 GB" or "820 MB".
+    /// Process memory: "4.1 GB" or "820 MB".
     static func memory(_ bytes: UInt64) -> String {
         let gib = Double(bytes) / Double(1 << 30)
         if gib >= 1 { return String(format: "%.1f GB", locale: locale, gib) }
         return "\(Int((Double(bytes) / Double(1 << 20)).rounded())) MB"
     }
 
-    /// Decimal units, as Finder shows disk sizes: "370" / "1,2".
+    /// Decimal units, as Finder shows disk sizes: "370" / "1.2".
     static func disk(used: Int64, total: Int64) -> String {
         if total >= 1_000_000_000_000 {
             let tb = { (b: Int64) in String(format: "%.2f", locale: locale, Double(b) / 1e12) }
@@ -125,7 +126,7 @@ enum Format {
         return "\(Int((Double(used) / 1e9).rounded())) / \(Int((Double(total) / 1e9).rounded())) GB"
     }
 
-    /// Rate for the menu, in decimal units: "80 KB/s", "1,2 MB/s".
+    /// Rate for the menu, in decimal units: "80 KB/s", "1.2 MB/s".
     static func rate(_ bytesPerSecond: Double) -> String {
         let kb = bytesPerSecond / 1000
         if kb < 1000 { return "\(Int(kb.rounded())) KB/s" }
@@ -134,7 +135,7 @@ enum Format {
         return String(format: "%.1f GB/s", locale: locale, mb / 1000)
     }
 
-    /// Compact rate for the menu bar: "80K", "1,2M".
+    /// Compact rate for the menu bar: "80K", "1.2M".
     static func compactRate(_ bytesPerSecond: Double) -> String {
         let kb = bytesPerSecond / 1000
         if kb < 1000 { return "\(Int(kb.rounded()))K" }
@@ -145,19 +146,19 @@ enum Format {
 
     static func pressure(_ pressure: MemoryPressure) -> String {
         switch pressure {
-        case .normal: "Pressão normal"
-        case .warning: "Pressão alta"
-        case .critical: "Pressão crítica"
+        case .normal: String(localized: "Normal pressure")
+        case .warning: String(localized: "High pressure")
+        case .critical: String(localized: "Critical pressure")
         }
     }
 
     static func thermal(_ state: ProcessInfo.ThermalState) -> String {
         switch state {
-        case .nominal: "Normal"
-        case .fair: "Elevada"
-        case .serious: "Alta"
-        case .critical: "Crítica"
-        @unknown default: "Desconhecida"
+        case .nominal: String(localized: "Normal")
+        case .fair: String(localized: "Fair")
+        case .serious: String(localized: "Serious")
+        case .critical: String(localized: "Critical")
+        @unknown default: String(localized: "Unknown")
         }
     }
 

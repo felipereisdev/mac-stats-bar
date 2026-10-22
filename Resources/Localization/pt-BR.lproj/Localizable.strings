@@ -1,0 +1,56 @@
+/* Menu bar */
+"CPU" = "CPU";
+"GPU" = "GPU";
+"RAM" = "RAM";
+"SWAP" = "SWAP";
+"DISK" = "DISCO";
+/* Disk activity column: read / write */
+"R" = "L";
+"W" = "G";
+
+/* Menu */
+"Memory" = "Memória";
+"Disk" = "Disco";
+"Network" = "Rede";
+"Temperature" = "Temperatura";
+"%lld cores" = "%lld núcleos";
+"%lld cores · %lld performance + %lld efficiency" = "%lld núcleos · %lld de desempenho + %lld de eficiência";
+"Normal pressure" = "Pressão normal";
+"High pressure" = "Pressão alta";
+"Critical pressure" = "Pressão crítica";
+"Read %@ · Write %@" = "Leitura %@ · Gravação %@";
+"Normal" = "Normal";
+"Fair" = "Elevada";
+"Serious" = "Alta";
+"Critical" = "Crítica";
+"Unknown" = "Desconhecida";
+"System process: it can't be quit from here" = "Processo do sistema: não pode ser encerrado por aqui";
+"Settings…" = "Preferências…";
+"Open Activity Monitor" = "Abrir Monitor de Atividade";
+"Quit MacStatsBar" = "Sair";
+
+/* Quitting an app */
+"Quit" = "Encerrar";
+"Cancel" = "Cancelar";
+"Quit %@?" = "Encerrar %@?";
+"This will free about %@ of memory." = "Vai liberar cerca de %@ de memória.";
+"If anything is unsaved, the app will ask before closing." = "Se houver algo sem salvar, o app vai perguntar antes de fechar.";
+"Its %lld processes will be terminated without a chance to save open work." = "Os %lld processos serão finalizados sem chance de salvar o que estiver aberto.";
+"The process will be terminated without a chance to save open work." = "O processo será finalizado sem chance de salvar o que estiver aberto.";
+
+/* Settings */
+"Show in the menu bar" = "Mostrar na barra de menus";
+"Swap" = "Swap";
+"Disk space" = "Disco (espaço)";
+"Disk activity" = "Atividade do disco";
+"Colors" = "Cores";
+"Orange from" = "Laranja a partir de";
+"Red from" = "Vermelho a partir de";
+"RAM color follows" = "Cor da RAM segue";
+"Memory pressure" = "Pressão de memória";
+"Percentage used" = "Porcentagem usada";
+"General" = "Geral";
+"Refresh every" = "Atualizar a cada";
+"1 second" = "1 segundo";
+"%lld seconds" = "%lld segundos";
+"Open at login" = "Abrir ao iniciar sessão";
