@@ -356,6 +356,29 @@ struct PreferencesView: View {
                 }
                 Toggle("Open at login", isOn: $settings.launchAtLogin)
             }
+            Section("Docker and activity") {
+                TextField("Docker CLI path", text: $settings.dockerExecutablePath, prompt: Text("Automatic"))
+                    .help("Leave empty to find Docker automatically, or enter the full path to the docker executable.")
+                Toggle("Observe activity in the background", isOn: $settings.activitySuggestionsEnabled)
+                Picker("Observation window", selection: $settings.activityWindowMinutes) {
+                    Text("15 minutes").tag(15)
+                    Text("30 minutes").tag(30)
+                    Text("60 minutes").tag(60)
+                }.disabled(!settings.activitySuggestionsEnabled)
+                Text("Suggestions are based on local observations. Nothing is stopped or deleted automatically.")
+                    .font(.caption).foregroundStyle(.secondary)
+            }
+            if !settings.suggestionExclusions.isEmpty {
+                Section("Never suggest") {
+                    ForEach(settings.suggestionExclusions.keys.sorted(), id: \.self) { key in
+                        HStack {
+                            Text(verbatim: settings.suggestionExclusions[key] ?? key).lineLimit(1)
+                            Spacer()
+                            Button("Restore") { settings.suggestionExclusions.removeValue(forKey: key) }
+                        }
+                    }
+                }
+            }
         }
         .formStyle(.grouped)
         .frame(width: 380)

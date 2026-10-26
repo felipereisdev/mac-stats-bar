@@ -46,6 +46,21 @@ final class Settings: ObservableObject {
     @Published var launchAtLogin: Bool {
         didSet { applyLaunchAtLogin() }
     }
+    @Published var activitySuggestionsEnabled: Bool {
+        didSet { defaults.set(activitySuggestionsEnabled, forKey: "activitySuggestionsEnabled") }
+    }
+    @Published var activityWindowMinutes: Int {
+        didSet { defaults.set(activityWindowMinutes, forKey: "activityWindowMinutes") }
+    }
+    @Published var dockerExecutablePath: String {
+        didSet { defaults.set(dockerExecutablePath, forKey: "dockerExecutablePath") }
+    }
+    @Published var suggestionExclusions: [String: String] {
+        didSet { defaults.set(suggestionExclusions, forKey: "suggestionExclusions") }
+    }
+    @Published var suggestionIgnoredUntil: [String: Double] {
+        didSet { defaults.set(suggestionIgnoredUntil, forKey: "suggestionIgnoredUntil") }
+    }
 
     init() {
         if let saved = defaults.stringArray(forKey: "barMetrics") {
@@ -58,6 +73,12 @@ final class Settings: ObservableObject {
         ramColorByPressure = defaults.object(forKey: "ramColorByPressure") as? Bool ?? true
         refreshInterval = defaults.object(forKey: "refreshInterval") as? Double ?? 2
         launchAtLogin = SMAppService.mainApp.status == .enabled
+        activitySuggestionsEnabled = defaults.bool(forKey: "activitySuggestionsEnabled")
+        let savedWindow = defaults.integer(forKey: "activityWindowMinutes")
+        activityWindowMinutes = [15, 30, 60].contains(savedWindow) ? savedWindow : 15
+        dockerExecutablePath = defaults.string(forKey: "dockerExecutablePath") ?? ""
+        suggestionExclusions = defaults.dictionary(forKey: "suggestionExclusions") as? [String: String] ?? [:]
+        suggestionIgnoredUntil = defaults.dictionary(forKey: "suggestionIgnoredUntil") as? [String: Double] ?? [:]
     }
 
     func level(_ fraction: Double) -> Level {

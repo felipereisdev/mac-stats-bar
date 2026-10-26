@@ -9,7 +9,7 @@ final class PassthroughHostingView<Content: View>: NSHostingView<Content> {
 }
 
 @MainActor
-final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
+final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWindowDelegate {
     private let model = StatsModel()
     private let settings = Settings()
     private let sampler = SystemSampler()
@@ -18,11 +18,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     private var statusLabel: NSView?
     private var timer: Timer?
     private var preferencesWindow: NSWindow?
+    private var resourcesWindow: NSWindow?
+    private lazy var resourceModel = ResourceModel(settings: settings)
     private var cancellables = Set<AnyCancellable>()
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         setUpStatusItem()
         setUpMenu()
+        _ = resourceModel
 
         topSampler.onSample = { [weak self] apps, cpuValid in
             self?.model.update(apps: apps, cpuValid: cpuValid)
@@ -45,6 +48,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         refresh()
         scheduleTimer()
         registerLoginItemOnce()
+        if CommandLine.arguments.contains("--resources") {
+            DispatchQueue.main.async { self.openResources(tab: .cleanup) }
+        }
     }
 
     private func scheduleTimer() {
@@ -89,6 +95,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         menu.addItem(panelItem)
 
         menu.addItem(.separator())
+        let docker = NSMenuItem(title: String(localized: "Clean Docker…"), action: #selector(openDocker), keyEquivalent: "")
+        docker.target = self
+        menu.addItem(docker)
+        let suggestions = NSMenuItem(title: String(localized: "Free memory…"), action: #selector(openSuggestions), keyEquivalent: "")
+        suggestions.target = self
+        menu.addItem(suggestions)
         let preferences = NSMenuItem(title: String(localized: "Settings…"), action: #selector(openPreferences), keyEquivalent: ",")
         preferences.target = self
         menu.addItem(preferences)
@@ -172,6 +184,48 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
     @objc private func openActivityMonitor() {
         NSWorkspace.shared.open(URL(fileURLWithPath: "/System/Applications/Utilities/Activity Monitor.app"))
+    }
+
+    @objc private func openDocker() { openResources(tab: .cleanup) }
+    @objc private func openSuggestions() { openResources(tab: .suggestions) }
+
+    private func openResources(tab: ResourceTab) {
+        resourceModel.selectedTab = tab
+        if resourcesWindow == nil {
+            let window = NSWindow(contentViewController: NSHostingController(
+                rootView: ResourceWindowView(model: resourceModel, settings: settings)
+            ))
+            window.title = String(localized: "MacStatsBar Resources")
+            window.styleMask = [.titled, .closable, .miniaturizable, .resizable]
+            window.setContentSize(NSSize(width: 1040, height: 680))
+            window.contentMinSize = NSSize(width: 880, height: 560)
+            window.isReleasedWhenClosed = false
+            window.delegate = self
+            window.center()
+            resourcesWindow = window
+        }
+        resourceModel.setVisible(true)
+        NSApp.activate()
+        resourcesWindow?.deminiaturize(nil)
+        resourcesWindow?.makeKeyAndOrderFront(nil)
+    }
+
+    func windowWillClose(_ notification: Notification) {
+        if (notification.object as? NSWindow) === resourcesWindow { resourceModel.setVisible(false) }
+    }
+
+    func windowDidMiniaturize(_ notification: Notification) {
+        if (notification.object as? NSWindow) === resourcesWindow { resourceModel.setVisible(false) }
+    }
+
+    func windowDidDeminiaturize(_ notification: Notification) {
+        if (notification.object as? NSWindow) === resourcesWindow { resourceModel.setVisible(true) }
+    }
+
+    func applicationWillTerminate(_ notification: Notification) {
+        resourceModel.shutdown()
+        topSampler.stop()
+        timer?.invalidate()
     }
 
     func menuWillOpen(_ menu: NSMenu) {
